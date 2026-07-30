@@ -5,11 +5,17 @@ import "./index.css";
 import App from "./App";
 
 import { CaseProvider } from "./features/case/context/CaseContext";
+import { TemplateProvider } from "./features/templates/context/TemplateContext";
+import { EditorProvider } from "./features/editor/context/EditorContext";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <CaseProvider>
+<CaseProvider>
+  <TemplateProvider>
+    <EditorProvider>
       <App />
-    </CaseProvider>
+    </EditorProvider>
+  </TemplateProvider>
+</CaseProvider>
   </React.StrictMode>,
 );

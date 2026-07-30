@@ -9,7 +9,14 @@ export type CaseAction =
   | { type: "SET_CASES"; payload: Case[] }
   | { type: "ADD_CASE"; payload: Case }
   | { type: "DELETE_CASE"; payload: string }
-  | { type: "SET_ACTIVE_CASE"; payload: string };
+  | { type: "SET_ACTIVE_CASE"; payload: string }
+  | {
+      type: "UPDATE_CASE";
+      payload: {
+        id: string;
+        updates: Partial<Case>;
+      };
+    };
 
 export function caseReducer(state: CaseState, action: CaseAction): CaseState {
   switch (action.type) {
@@ -44,7 +51,26 @@ export function caseReducer(state: CaseState, action: CaseAction): CaseState {
         ...state,
         activeCase: state.cases.find((c) => c.id === action.payload) ?? null,
       };
+case "UPDATE_CASE": {
+  const updatedCases = state.cases.map((c) =>
+    c.id === action.payload.id
+      ? {
+          ...c,
+          ...action.payload.updates,
+          updatedAt: new Date().toISOString(),
+        }
+      : c
+  );
 
+  return {
+    ...state,
+    cases: updatedCases,
+    activeCase:
+      state.activeCase?.id === action.payload.id
+        ? updatedCases.find((c) => c.id === action.payload.id) ?? null
+        : state.activeCase,
+  };
+}
     default:
       return state;
   }

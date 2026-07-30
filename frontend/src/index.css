@@ -68,3 +68,23 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(71 85 105);
 }
+
+/* TipTap Editor */
+.ProseMirror {
+  min-height: 450px;
+  padding: 20px;
+  outline: none;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 16px auto;
+  border-radius: 10px;
+  border: 1px solid #2b2b2b;
+}
+
+.ProseMirror p {
+  margin: 0.5rem 0;
+}

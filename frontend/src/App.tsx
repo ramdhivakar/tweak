@@ -22,7 +22,7 @@ function Home() {
       <div className="max-w-xl text-center">
         <div className="mb-8">
           <h1 className="text-5xl font-semibold tracking-tight text-white">
-            Support Workspace
+            Tweak
           </h1>
 
           <p className="mt-5 text-lg leading-8 text-neutral-500">
@@ -43,46 +43,4 @@ function Home() {
   );
 }
 
-function CaseWorkspace() {
-  return (
-    <div className="grid h-full grid-cols-[340px_300px_1fr] gap-6">
-      {/* Details */}
-      <section className="rounded-2xl border border-[#1A1A1A] bg-[#090909] p-6">
-        <h2 className="mb-5 text-lg font-semibold text-white">Case Details</h2>
 
-        <p className="text-sm text-neutral-500">Coming in next step...</p>
-      </section>
-
-      {/* Templates */}
-      <section className="rounded-2xl border border-[#1A1A1A] bg-[#090909] p-6">
-        <h2 className="mb-5 text-lg font-semibold text-white">Templates</h2>
-
-        <p className="text-sm text-neutral-500">Coming in next step...</p>
-      </section>
-
-      {/* Output */}
-      <section className="rounded-2xl border border-[#1A1A1A] bg-[#090909] p-6">
-        <h2 className="mb-5 text-lg font-semibold text-white">Output</h2>
-
-        <textarea
-          className="
-            h-full
-            min-h-[600px]
-            w-full
-            resize-none
-            rounded-xl
-            border
-            border-[#232323]
-            bg-[#050505]
-            p-4
-            text-white
-            outline-none
-            placeholder:text-neutral-600
-            focus:border-[#8E2434]
-          "
-          placeholder="Generated email or troubleshooting notes will appear here..."
-        />
-      </section>
-    </div>
-  );
-}
