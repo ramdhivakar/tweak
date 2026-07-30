@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { caseReducer, type CaseState } from "./caseReducer";
+import { caseReducer, type CaseAction, type CaseState } from "./caseReducer";
 import { getCases, saveCases } from "../storage/localStorage";
 
 const savedCases = getCases();
@@ -18,7 +18,7 @@ const initialState = {
 
 const CaseContext = createContext<{
   state: CaseState;
-  dispatch: React.Dispatch<any>;
+  dispatch: React.Dispatch<CaseAction>;
 } | null>(null);
 
 export function CaseProvider({ children }: { children: ReactNode }) {
