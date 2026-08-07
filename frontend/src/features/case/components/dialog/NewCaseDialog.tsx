@@ -11,7 +11,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import { caseSections } from "../../data/caseFields";
+import { newCaseFields } from "../../data/newCaseFields";
 import { useCaseContext } from "../../context/CaseContext";
 import type { Case } from "../../types/case";
 
@@ -29,10 +29,23 @@ export default function NewCaseDialog({ trigger }: Props) {
   const [formData, setFormData] = useState<Record<string, string>>({});
 
   function updateField(id: string, value: string) {
-    setFormData((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        [id]: value,
+      };
+
+      if (id === "hasPreviousCase" && value === "false") {
+        updated.previousCase = "";
+        updated.previousTroubleshooting = "";
+      }
+
+      if (id === "logsAvailable" && value === "false") {
+        updated.availableLogs = "";
+      }
+
+      return updated;
+    });
   }
 
   function createCase() {
@@ -49,9 +62,27 @@ export default function NewCaseDialog({ trigger }: Props) {
       customerName: formData.customerName || "",
       companyName: formData.companyName || "",
 
-      emails: [],
+      emails: formData.emails
+        ? formData.emails
+            .split(",")
+            .map((email) => email.trim())
+            .filter(Boolean)
+            .map((email) => ({
+              id: uuid(),
+              value: email,
+            }))
+        : [],
 
-      phoneNumbers: [],
+      phoneNumbers: formData.phoneNumbers
+        ? formData.phoneNumbers
+            .split(",")
+            .map((phone) => phone.trim())
+            .filter(Boolean)
+            .map((phone) => ({
+              id: uuid(),
+              value: phone,
+            }))
+        : [],
 
       // Product
       product: formData.product || "",
@@ -59,6 +90,8 @@ export default function NewCaseDialog({ trigger }: Props) {
       siteId: formData.siteId || "",
 
       // Support
+      caseType: (formData.caseType as "Issue" | "Query") || "Issue",
+
       severity:
         (formData.severity as "Low" | "Medium" | "High" | "Critical") ||
         "Medium",
@@ -69,12 +102,39 @@ export default function NewCaseDialog({ trigger }: Props) {
 
       logsAvailable: formData.logsAvailable === "true",
 
+      availableLogs: formData.availableLogs || "",
+
       previousCase: formData.previousCase || "",
 
+      previousTroubleshooting: formData.previousTroubleshooting || "",
+
+      // First Interaction
+      connectedTime: "",
+
+      contactMode: "",
+
+      totalClients: "",
+
+      affectedClients: "",
+
+      clientOS: "",
+
+      serverOS: "",
+
+      database: "",
+
+      troubleshootingSteps: "",
+
+      resolutionSummary: "",
+
+      logReview: "",
+
+      // Case
       issue: formData.issue || "",
 
       description: formData.description || "",
 
+      // Misc
       notes: "",
 
       timeline: [],
@@ -90,7 +150,6 @@ export default function NewCaseDialog({ trigger }: Props) {
     });
 
     setFormData({});
-
     setOpen(false);
   }
 
@@ -119,7 +178,7 @@ export default function NewCaseDialog({ trigger }: Props) {
 
         <div className="flex-1 overflow-y-auto px-4 py-10">
           <div className="space-y-12">
-            {caseSections.map((section) => (
+            {newCaseFields.map((section) => (
               <section key={section.id}>
                 <div className="mb-8">
                   <h2 className="text-xs font-semibold uppercase tracking-[0.35em] text-neutral-500">
@@ -136,14 +195,29 @@ export default function NewCaseDialog({ trigger }: Props) {
                       : "space-y-6"
                   }
                 >
-                  {section.fields.map((field) => (
-                    <DynamicField
-                      key={field.id}
-                      field={field}
-                      value={formData[field.id] || ""}
-                      onChange={(value) => updateField(field.id, value)}
-                    />
-                  ))}
+                  {section.fields
+                    .filter((field) => {
+                      if (
+                        field.id === "previousCase" ||
+                        field.id === "previousTroubleshooting"
+                      ) {
+                        return formData.hasPreviousCase === "true";
+                      }
+
+                      if (field.id === "availableLogs") {
+                        return formData.logsAvailable === "true";
+                      }
+
+                      return true;
+                    })
+                    .map((field) => (
+                      <DynamicField
+                        key={field.id}
+                        field={field}
+                        value={formData[field.id] || ""}
+                        onChange={(value) => updateField(field.id, value)}
+                      />
+                    ))}
                 </div>
               </section>
             ))}

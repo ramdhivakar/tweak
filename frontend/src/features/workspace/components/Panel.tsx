@@ -22,25 +22,60 @@ export default function Panel({
         width: collapsed ? 52 : width,
       }}
       className={cn(
-        "relative flex h-full shrink-0 flex-col overflow-hidden border-r border-[#1A1A1A] bg-[#090909] transition-[width] duration-300 ease-in-out",
+        "relative flex h-full shrink-0 transition-[width] duration-300 ease-in-out",
       )}
     >
-      <div className="flex h-12 items-center justify-between border-b border-[#1A1A1A] px-4">
-        {!collapsed && (
-          <h2 className="text-sm font-semibold tracking-wide text-white">
-            {title}
-          </h2>
-        )}
+      {collapsed ? (
+        <div className="m-3 flex h-[calc(100%-24px)] w-[52px] flex-col items-center rounded-2xl border border-[#1A1A1A] bg-[#090909]">
+          <button
+            onClick={onToggle}
+            className="mt-3 rounded-md p-1 text-neutral-400 transition hover:bg-[#171717] hover:text-white"
+          >
+            <ChevronRight size={18} />
+          </button>
 
-        <button
-          onClick={onToggle}
-          className="rounded-md p-1 text-neutral-400 transition hover:bg-[#171717] hover:text-white"
+          <div className="mt-8 flex flex-1 items-center justify-center">
+            <span
+              className="select-none text-[11px] font-semibold uppercase tracking-[0.35em] text-neutral-500"
+              style={{
+                writingMode: "vertical-rl",
+                transform: "rotate(180deg)",
+              }}
+            >
+              {title}
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div
+          className={cn(
+            "m-3 flex h-[calc(100%-24px)] w-full flex-col overflow-hidden rounded-2xl border border-[#1A1A1A] bg-[#090909]",
+            "transition-all duration-300 ease-out",
+          )}
         >
-          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-        </button>
-      </div>
+          <div className="flex h-12 items-center justify-between border-b border-[#1A1A1A] px-4">
+            <h2 className="text-sm font-semibold tracking-wide text-white">
+              {title}
+            </h2>
 
-      {!collapsed && <div className="flex-1 overflow-auto p-4">{children}</div>}
+            <button
+              onClick={onToggle}
+              className="rounded-md p-1 text-neutral-400 transition hover:bg-[#171717] hover:text-white"
+            >
+              <ChevronLeft size={18} />
+            </button>
+          </div>
+
+          <div
+            className={cn(
+              "flex-1 overflow-auto p-4",
+              "transition-all duration-300",
+            )}
+          >
+            {children}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

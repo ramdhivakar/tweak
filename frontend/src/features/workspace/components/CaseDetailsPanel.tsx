@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-
+import EnvironmentSection from "./details/EnvironmentSection";
+import TroubleshootingSection from "./details/TroubleshootingSection";
 import CustomerSection from "./details/CustomerSection";
 import IssueSection from "./details/IssueSection";
 import ProductSection from "./details/ProductSection";
@@ -23,9 +24,7 @@ export default function CaseDetailsPanel() {
   return (
     <div className="flex h-full flex-col">
       <div className="mb-5 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">
-          Case Details
-        </h2>
+        <h2 className="text-lg font-semibold text-white">Case Details</h2>
 
         <Button
           size="sm"
@@ -50,6 +49,18 @@ export default function CaseDetailsPanel() {
         />
 
         <SupportSection
+          editing={editing}
+          data={currentCase}
+          update={updateField}
+        />
+
+        <EnvironmentSection
+          editing={editing}
+          data={currentCase}
+          update={updateField}
+        />
+
+        <TroubleshootingSection
           editing={editing}
           data={currentCase}
           update={updateField}

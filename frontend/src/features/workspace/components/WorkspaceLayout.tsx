@@ -5,40 +5,43 @@ import CaseDetailsPanel from "./CaseDetailsPanel";
 import TemplatesPanel from "./TemplatesPanel";
 import OutputPanel from "./OutputPanel";
 
+import { useCaseContext } from "@/features/case/context/CaseContext";
+
 export default function WorkspaceLayout() {
+  const { state } = useCaseContext();
+
+  const currentCase = state.activeCase;
+
+  const isTemplateMode = currentCase?.isTemporary;
+
   const [detailsCollapsed, setDetailsCollapsed] = useState(false);
+
   const [templatesCollapsed, setTemplatesCollapsed] = useState(false);
 
   return (
     <div className="flex h-full overflow-hidden">
-      <Panel
-        title="Case Details"
-        width={340}
-        collapsed={detailsCollapsed}
-        onToggle={() => setDetailsCollapsed((v) => !v)}
-      >
-        <CaseDetailsPanel />
-      </Panel>
+      {!isTemplateMode && (
+        <Panel
+          title="Case Details"
+          width={340}
+          collapsed={detailsCollapsed}
+          onToggle={() => setDetailsCollapsed((v) => !v)}
+        >
+          <CaseDetailsPanel />
+        </Panel>
+      )}
 
       <Panel
-        title="Templates"
-        width={300}
+        title={isTemplateMode ? "Template Library" : "Templates"}
+        width={isTemplateMode ? 360 : 300}
         collapsed={templatesCollapsed}
         onToggle={() => setTemplatesCollapsed((v) => !v)}
       >
         <TemplatesPanel />
       </Panel>
 
-      <section className="flex min-w-0 flex-1 flex-col bg-[#050505]">
-        <div className="flex h-12 items-center border-b border-[#1A1A1A] px-5">
-          <h2 className="text-sm font-semibold tracking-wide text-white">
-            Output
-          </h2>
-        </div>
-
-        <div className="flex-1 overflow-hidden">
-          <OutputPanel />
-        </div>
+      <section className="flex min-w-0 flex-1 overflow-hidden bg-[#050505] pl-4">
+        <OutputPanel />
       </section>
     </div>
   );

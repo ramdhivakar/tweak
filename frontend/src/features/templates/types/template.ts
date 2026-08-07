@@ -1,8 +1,19 @@
+export type TemplateCategory =
+  | "Communication"
+  | "Follow Up"
+  | "Calls"
+  | "Collaboration";
+
 export interface Template {
   id: string;
-  category: string;
+
   title: string;
+
+  category: TemplateCategory;
+
   description?: string;
-  body: string;
+
   favorite?: boolean;
+
+  body: string;
 }

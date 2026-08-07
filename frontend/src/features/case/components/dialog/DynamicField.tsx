@@ -109,14 +109,17 @@ export default function DynamicField({ field, value, onChange }: Props) {
             onChange={(e) => onChange(e.target.value)}
             placeholder="customer@email.com"
             className="
-              h-11
-              rounded-xl
-              border-[#232323]
-              bg-[#0A0A0A]
-              text-white
-              placeholder:text-neutral-600
-              focus-visible:border-[#8E2434]
-            "
+    h-11
+    rounded-xl
+    border-[#232323]
+    bg-[#0A0A0A]
+    text-white
+    placeholder:text-neutral-600
+    focus-visible:border-[#8E2434]
+    focus-visible:ring-1
+    focus-visible:ring-[#8E2434]
+    focus-visible:ring-offset-0
+  "
           />
         </div>
       );
@@ -133,14 +136,17 @@ export default function DynamicField({ field, value, onChange }: Props) {
             onChange={(e) => onChange(e.target.value)}
             placeholder="+91 9876543210"
             className="
-              h-11
-              rounded-xl
-              border-[#232323]
-              bg-[#0A0A0A]
-              text-white
-              placeholder:text-neutral-600
-              focus-visible:border-[#8E2434]
-            "
+    h-11
+    rounded-xl
+    border-[#232323]
+    bg-[#0A0A0A]
+    text-white
+    placeholder:text-neutral-600
+    focus-visible:border-[#8E2434]
+    focus-visible:ring-1
+    focus-visible:ring-[#8E2434]
+    focus-visible:ring-offset-0
+  "
           />
         </div>
       );

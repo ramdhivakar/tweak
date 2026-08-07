@@ -117,8 +117,16 @@ export const caseSections: CaseSection[] = [
 
       {
         id: "logsAvailable",
-        label: "Logs Available",
+        label: "Logs Uploaded by Customer",
         type: "switch",
+      },
+
+      {
+        id: "availableLogs",
+        label: "Available Logs",
+        placeholder:
+          "Example: SMP Logs, Agent Logs, Sylink, System Information...",
+        type: "textarea",
       },
     ],
   },
@@ -133,6 +141,22 @@ export const caseSections: CaseSection[] = [
     columns: 2,
 
     fields: [
+      {
+        id: "caseType",
+        label: "Case Type",
+        type: "select",
+
+        options: [
+          {
+            label: "Issue",
+            value: "Issue",
+          },
+          {
+            label: "Query",
+            value: "Query",
+          },
+        ],
+      },
       {
         id: "severity",
         label: "Severity",
@@ -161,12 +185,24 @@ export const caseSections: CaseSection[] = [
         ],
       },
 
+      {
+        id: "hasPreviousCase",
+        label: "Previous Case Available",
+        type: "switch",
+      },
 
       {
         id: "previousCase",
-        label: "Previous Case",
+        label: "Previous Case Number",
         placeholder: "352001",
         type: "text",
+      },
+
+      {
+        id: "previousTroubleshooting",
+        label: "Troubleshooting Performed in Previous Case",
+        placeholder: "Enter troubleshooting performed in the previous case...",
+        type: "textarea",
       },
     ],
   },

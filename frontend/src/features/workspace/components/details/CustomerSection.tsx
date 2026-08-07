@@ -7,11 +7,7 @@ interface Props {
   update: (field: string, value: any) => void;
 }
 
-export default function CustomerSection({
-  editing,
-  data,
-  update,
-}: Props) {
+export default function CustomerSection({ editing, data, update }: Props) {
   return (
     <Section title="Customer">
       <EditableField
@@ -30,7 +26,7 @@ export default function CustomerSection({
 
       <EditableField
         label="Emails"
-        value={data.emails?.join(", ")}
+        value={data.emails?.map((e: any) => e.value).join(", ")}
         editing={editing}
         onChange={(v) =>
           update(
@@ -39,13 +35,14 @@ export default function CustomerSection({
               .split(",")
               .map((x: string) => x.trim())
               .filter(Boolean)
+              .map((value: string) => ({ value })),
           )
         }
       />
 
       <EditableField
         label="Phones"
-        value={data.phoneNumbers?.join(", ")}
+        value={data.phoneNumbers?.map((p: any) => p.value).join(", ")}
         editing={editing}
         onChange={(v) =>
           update(
@@ -54,6 +51,7 @@ export default function CustomerSection({
               .split(",")
               .map((x: string) => x.trim())
               .filter(Boolean)
+              .map((value: string) => ({ value })),
           )
         }
       />

@@ -26,12 +26,17 @@ export function caseReducer(state: CaseState, action: CaseAction): CaseState {
         cases: action.payload,
       };
 
-    case "ADD_CASE":
+    case "ADD_CASE": {
+      const newCases = action.payload.isTemporary
+        ? state.cases
+        : [action.payload, ...state.cases];
+
       return {
         ...state,
-        cases: [action.payload, ...state.cases],
-        activeCase: null,
+        cases: newCases,
+        activeCase: action.payload,
       };
+    }
 
     case "DELETE_CASE": {
       const updatedCases = state.cases.filter((c) => c.id !== action.payload);
@@ -51,26 +56,26 @@ export function caseReducer(state: CaseState, action: CaseAction): CaseState {
         ...state,
         activeCase: state.cases.find((c) => c.id === action.payload) ?? null,
       };
-case "UPDATE_CASE": {
-  const updatedCases = state.cases.map((c) =>
-    c.id === action.payload.id
-      ? {
-          ...c,
-          ...action.payload.updates,
-          updatedAt: new Date().toISOString(),
-        }
-      : c
-  );
+    case "UPDATE_CASE": {
+      const updatedCases = state.cases.map((c) =>
+        c.id === action.payload.id
+          ? {
+              ...c,
+              ...action.payload.updates,
+              updatedAt: new Date().toISOString(),
+            }
+          : c,
+      );
 
-  return {
-    ...state,
-    cases: updatedCases,
-    activeCase:
-      state.activeCase?.id === action.payload.id
-        ? updatedCases.find((c) => c.id === action.payload.id) ?? null
-        : state.activeCase,
-  };
-}
+      return {
+        ...state,
+        cases: updatedCases,
+        activeCase:
+          state.activeCase?.id === action.payload.id
+            ? (updatedCases.find((c) => c.id === action.payload.id) ?? null)
+            : state.activeCase,
+      };
+    }
     default:
       return state;
   }

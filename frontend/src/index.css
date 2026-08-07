@@ -69,22 +69,67 @@ body {
   background: rgb(71 85 105);
 }
 
-/* TipTap Editor */
+/* -----------------------------
+   TipTap Editor
+------------------------------ */
+
 .ProseMirror {
-  min-height: 450px;
-  padding: 20px;
+  min-height: 100%;
+  padding: 24px;
   outline: none;
+  color: #ffffff;
+  background: transparent;
+  line-height: 1.6;
+}
+
+.ProseMirror * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  margin: 0;
+}
+
+.ProseMirror p {
+  margin: 0;
+}
+
+.ProseMirror table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.ProseMirror tr {
+  margin: 0;
+}
+
+.ProseMirror td {
+  padding: 4px 0;
+  vertical-align: top;
 }
 
 .ProseMirror img {
   max-width: 100%;
-  height: auto;
   display: block;
   margin: 16px auto;
-  border-radius: 10px;
-  border: 1px solid #2b2b2b;
+  border-radius: 8px;
+}
+.ProseMirror td {
+  color: #ffffff;
 }
 
-.ProseMirror p {
-  margin: 0.5rem 0;
+.ProseMirror strong {
+  color: #ffffff;
+}
+
+.ProseMirror div {
+  color: inherit;
 }

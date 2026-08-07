@@ -10,77 +10,82 @@ export default function EmailEditor() {
   const { draft, setBody } = useDraft();
 
   const insertImage = (file: File) => {
-  if (!editor) return;
+    if (!editor) return;
 
-  const reader = new FileReader();
+    const reader = new FileReader();
 
-  reader.onload = () => {
-    editor
-      .chain()
-      .focus()
-      .setImage({
-        src: reader.result as string,
-      })
-      .run();
+    reader.onload = () => {
+      editor
+        .chain()
+        .focus()
+        .setImage({
+          src: reader.result as string,
+        })
+        .run();
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  reader.readAsDataURL(file);
-};
-
   const editor = useEditor({
-extensions: [
-  StarterKit,
-  Underline,
-  Image,
-  Placeholder.configure({
-    placeholder: "Select a template or start composing your email...",
-  }),
-],
+    extensions: [
+      StarterKit,
+      Underline,
+      Image,
+      Placeholder.configure({
+        placeholder: "Select a template or start composing your email...",
+      }),
+    ],
 
     content: draft.body,
 
-editorProps: {
-  attributes: {
-    class:
-      "min-h-[450px] outline-none p-5 prose prose-invert max-w-none",
-    spellcheck: "true",
-    autocorrect: "on",
-    autocapitalize: "sentences",
-  },
+    editorProps: {
+      attributes: {
+        class:
+          "min-h-full h-full outline-none px-8 py-6 max-w-none text-[15px] leading-7",
+        spellcheck: "true",
+        autocorrect: "on",
+        autocapitalize: "sentences",
+        autocomplete: "off",
+        "data-gramm": "true",
+        "data-gramm_editor": "true",
+        "data-enable-grammarly": "true",
+        lang: "en",
+      },
 
-  handlePaste(view, event) {
-    const items = event.clipboardData?.items;
+      handlePaste(view, event) {
+        const items = event.clipboardData?.items;
 
-    if (!items) return false;
+        if (!items) return false;
 
-    for (const item of items) {
-      if (item.type.startsWith("image/")) {
-        const file = item.getAsFile();
+        for (const item of items) {
+          if (item.type.startsWith("image/")) {
+            const file = item.getAsFile();
 
-        if (file) {
-          insertImage(file);
-          return true;
+            if (file) {
+              insertImage(file);
+              return true;
+            }
+          }
         }
-      }
-    }
 
-    return false;
-  },
-  handleDrop(view, event) {
-  const files = event.dataTransfer?.files;
+        return false;
+      },
+      handleDrop(view, event) {
+        const files = event.dataTransfer?.files;
 
-  if (!files?.length) return false;
+        if (!files?.length) return false;
 
-  for (const file of files) {
-    if (file.type.startsWith("image/")) {
-      insertImage(file);
-      return true;
-    }
-  }
+        for (const file of files) {
+          if (file.type.startsWith("image/")) {
+            insertImage(file);
+            return true;
+          }
+        }
 
-  return false;
-},
-},
+        return false;
+      },
+    },
 
     onUpdate({ editor }) {
       setBody(editor.getHTML());
@@ -97,5 +102,9 @@ editorProps: {
 
   if (!editor) return null;
 
-  return <EditorContent editor={editor} />;
+  return (
+    <div className="h-full w-full flex-1 overflow-auto">
+      <EditorContent editor={editor} className="h-full" />
+    </div>
+  );
 }

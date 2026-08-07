@@ -2,64 +2,101 @@ import type { Template } from "../types/template";
 
 export const templates: Template[] = [
   {
-    id: "first-response",
-    category: "First Response",
-    title: "Initial Customer Response",
+    id: "initial-contact",
+    title: "Initial Contact",
+    category: "Communication",
     favorite: true,
-    body: `Hello,
+    body: "",
+  },
 
-Thank you for contacting Broadcom Support.
+  {
+    id: "first-interaction",
+    title: "First Interaction",
+    category: "Communication",
+    favorite: true,
+    body: "",
+  },
 
-My name is {{engineer}} and I will be assisting you with case {{caseId}}.
+  {
+    id: "subsequent-interaction",
+    title: "Subsequent Interaction",
+    category: "Communication",
+    body: "",
+  },
 
-After reviewing your request, I understand the reported issue is:
+  {
+    id: "voice-mail",
+    title: "Voice Mail",
+    category: "Communication",
+    body: "",
+  },
 
-{{issue}}
+  {
+    id: "no-voice-mail",
+    title: "No Voice Mail",
+    category: "Communication",
+    body: "",
+  },
 
-To continue the investigation, please provide the requested information below.
+  {
+    id: "teams-invite",
+    title: "Teams Invite",
+    category: "Communication",
+    body: "",
+  },
 
-Thank you.
-Regards,
-{{engineer}}`,
+  {
+    id: "handoff",
+    title: "Handoff",
+    category: "Communication",
+    body: "",
+  },
+
+  {
+    id: "reassignment",
+    title: "Case Reassignment",
+    category: "Communication",
+    body: "",
   },
 
   {
     id: "logs",
-    category: "Logs",
     title: "Request Logs",
-    body: `Please collect and upload the following logs.
-
-• SMPLogs
-• Agent Logs
-• System Information
-
-Once uploaded, we will continue our investigation.`,
-  },
-
-  {
-    id: "followup",
-    category: "Follow Up",
-    title: "Follow Up",
-    body: `This is a follow-up regarding your support case.
-
-Kindly provide the requested information at your earliest convenience.`,
+    category: "Logs",
+    body: "",
   },
 
   {
     id: "engineering",
-    category: "Escalation",
     title: "Engineering Escalation",
-    body: `The issue requires further investigation.
-
-We are engaging our Engineering team and will update you once additional findings are available.`,
+    category: "Escalation",
+    body: "",
   },
 
   {
     id: "closure",
-    category: "Closure",
     title: "Case Closure",
-    body: `As we have not received any further updates, we will proceed with closing this case.
+    category: "Closure",
+    body: "",
+  },
+  {
+    id: "chaser-1",
+    title: "Chaser 1",
+    category: "Communication",
+    body: "",
+  },
 
-Please reopen the case if further assistance is required.`,
+  {
+    id: "chaser-2",
+    title: "Chaser 2",
+    category: "Communication",
+    body: "",
+  },
+
+  {
+    id: "chaser-3",
+    title: "Chaser 3",
+    category: "Communication",
+    body: "",
   },
 ];
