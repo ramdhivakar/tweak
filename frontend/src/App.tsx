@@ -9,18 +9,19 @@ import { useCaseContext } from "./features/case/context/CaseContext";
 import WorldClock from "./features/dashboard/components/WorldClock";
 
 import { createTemporaryCase } from "./features/case/utils/createTemporaryCase";
+import { FirstInteractionProvider } from "@/features/first-interaction/context/FirstInteractionContext";
 
 export default function App() {
   const { state } = useCaseContext();
 
   return (
-    <AppLayout
-      sidebar={state.activeCase?.isTemporary ? undefined : <Sidebar />}
-      header={<Header />}
-    >
+  <FirstInteractionProvider>
+    <AppLayout sidebar={<Sidebar />} header={<Header />}>
       {state.activeCase ? <WorkspaceLayout /> : <Home />}
     </AppLayout>
-  );
+  </FirstInteractionProvider>
+);
+
 }
 
 function Home() {
