@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { useFirstInteraction } from "../context/FirstInteractionContext";
-import { generateMockFirstInteractionAI } from "../utils/mockFirstInteractionAI";
+import { generateFirstInteractionAI } from "../services/firstInteractionAI";
 
 import type { Case } from "@/features/case/types/case";
 
@@ -83,7 +83,7 @@ export default function FirstInteractionAIDialog({
     onUseCaseDetails();
   }
 
-  function handleContinue() {
+  async function handleContinue() {
     if (!currentCase) return;
 
     /*
@@ -97,8 +97,11 @@ export default function FirstInteractionAIDialog({
      *
      * case details → backend → LLM
      */
-    const result =
-      generateMockFirstInteractionAI(currentCase);
+    const result = await generateFirstInteractionAI({
+  source: transcriptFile ? "transcript" : "case",
+  currentCase,
+  transcriptFile,
+});
 
     if (transcriptFile) {
       setAISource("transcript");
