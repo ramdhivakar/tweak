@@ -20,12 +20,20 @@ interface FirstInteractionContextValue {
   reset: () => void;
 
   aiResult: FirstInteractionAIResult | null;
-  setAIResult: (result: FirstInteractionAIResult | null) => void;
+
+  setAIResult: (
+    result: FirstInteractionAIResult | null,
+  ) => void;
 
   aiSource: "case" | "transcript" | null;
-  setAISource: (source: "case" | "transcript" | null) => void;
 
-  applyAIResult: () => void;
+  setAISource: (
+    source: "case" | "transcript" | null,
+  ) => void;
+
+  applyAIResult: (
+    result: FirstInteractionAIResult,
+  ) => void;
 }
 
 const initialData: FirstInteraction = {
@@ -40,7 +48,9 @@ const initialData: FirstInteraction = {
 };
 
 const FirstInteractionContext =
-  createContext<FirstInteractionContextValue | null>(null);
+  createContext<FirstInteractionContextValue | null>(
+    null,
+  );
 
 export function FirstInteractionProvider({
   children,
@@ -67,31 +77,61 @@ export function FirstInteractionProvider({
     }));
   }
 
-  function applyAIResult() {
-    if (!aiResult) return;
+  /*
+   * Apply the complete AI result to the
+   * First Interaction form.
+   *
+   * This is the bridge:
+   *
+   * Groq
+   *   ↓
+   * AI Result
+   *   ↓
+   * FirstInteractionContext
+   *   ↓
+   * FirstInteractionForm
+   */
+  function applyAIResult(
+    result: FirstInteractionAIResult,
+  ) {
+    console.log(
+      "Applying First Interaction AI result:",
+      result,
+    );
+
+    setAIResult(result);
 
     setData((current) => ({
       ...current,
 
-      connectedTime: aiResult.connectedTime,
-      contactMode: aiResult.contactMode,
-      troubleshootingSteps:
-        aiResult.troubleshootingSteps,
-      resolutionSummary:
-        aiResult.resolutionSummary,
-      status: aiResult.status,
-      logsCollected:
-        aiResult.logsCollected,
-      logFindings:
-        aiResult.logFindings,
-    }));
+      connectedTime:
+        result.connectedTime ?? "",
 
-    setAIResult(null);
+      contactMode:
+        result.contactMode || "Microsoft Teams",
+
+      troubleshootingSteps:
+        result.troubleshootingSteps ?? "",
+
+      resolutionSummary:
+        result.resolutionSummary ?? "",
+
+      status:
+        result.status || "Pending Support",
+
+      logsCollected:
+        Boolean(result.logsCollected),
+
+      logFindings:
+        result.logFindings ?? "",
+    }));
   }
 
   function reset() {
     setData(initialData);
+
     setAIResult(null);
+
     setAISource(null);
   }
 
@@ -100,24 +140,35 @@ export function FirstInteractionProvider({
       data,
       updateField,
       reset,
+
       aiResult,
       setAIResult,
+
       aiSource,
       setAISource,
+
       applyAIResult,
     }),
-    [data, aiResult, aiSource],
+    [
+      data,
+      aiResult,
+      aiSource,
+    ],
   );
 
   return (
-    <FirstInteractionContext.Provider value={value}>
+    <FirstInteractionContext.Provider
+      value={value}
+    >
       {children}
     </FirstInteractionContext.Provider>
   );
 }
 
 export function useFirstInteraction() {
-  const context = useContext(FirstInteractionContext);
+  const context = useContext(
+    FirstInteractionContext,
+  );
 
   if (!context) {
     throw new Error(

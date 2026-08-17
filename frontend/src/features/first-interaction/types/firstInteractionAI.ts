@@ -1,13 +1,24 @@
 export interface FirstInteractionAIResult {
   connectedTime: string;
-  contactMode: string;
+
+  contactMode:
+    | "Microsoft Teams"
+    | "Phone"
+    | "Email"
+    | "Webex"
+    | "Zoom"
+    | "Other";
+
   troubleshootingSteps: string;
+
   resolutionSummary: string;
+
   status:
     | "Pending Customer"
     | "Pending Support"
     | "Pending Engineering";
+
   logsCollected: boolean;
-  logFindingsShared: boolean;
+
   logFindings: string;
 }
