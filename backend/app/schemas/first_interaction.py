@@ -28,20 +28,43 @@ class CaseDetails(BaseModel):
     previousCase: str = ""
 
 
-class FirstInteractionAIRequest(BaseModel):
-    source: Literal["case", "transcript"]
-
-    case: CaseDetails | None = None
-
-
-class FirstInteractionAIResult(BaseModel):
+class FirstInteractionDetails(BaseModel):
     connectedTime: str = ""
+
     contactMode: str = "Microsoft Teams"
 
     troubleshootingSteps: str = ""
+
     resolutionSummary: str = ""
 
     status: CaseStatus = "Pending Support"
 
     logsCollected: bool = False
+
+    logFindings: str = ""
+
+
+class FirstInteractionAIRequest(BaseModel):
+    source: Literal["case", "transcript"]
+
+    case: CaseDetails | None = None
+
+    firstInteraction: FirstInteractionDetails = (
+        FirstInteractionDetails()
+    )
+
+
+class FirstInteractionAIResult(BaseModel):
+    connectedTime: str = ""
+
+    contactMode: str = "Microsoft Teams"
+
+    troubleshootingSteps: str = ""
+
+    resolutionSummary: str = ""
+
+    status: CaseStatus = "Pending Support"
+
+    logsCollected: bool = False
+
     logFindings: str = ""

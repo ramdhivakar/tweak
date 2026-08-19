@@ -1,52 +1,114 @@
 import type { Case } from "@/features/case/types/case";
-import { heading, section, row, paragraph } from "../utils/templateBuilder";
+
+import {
+  heading,
+  section,
+  row,
+  paragraph,
+} from "../utils/templateBuilder";
 
 export function buildFirstInteraction(c: Case) {
   let html = "";
 
-  html += heading("First Interaction");
+  // Main heading
+  html += heading("First Interaction:");
 
+  // Basic case information
   html += row("Case Number", c.caseId);
-  html += row("Connected Time", c.connectedTime || "-");
-  html += row("Contact Mode", c.contactMode || "-");
+  html += row(
+    "Connected Time",
+    c.connectedTime || "-",
+  );
+  html += row(
+    "Contact Mode",
+    c.contactMode || "-",
+  );
 
-  html += section("Environment");
+  // Environment
+  html += section("Environment:");
 
-  html += row("Product Name", c.product);
-  html += row("Product Version", c.productVersion);
-  html += row("Total Clients", c.totalClients || "-");
-  html += row("Affected Clients", c.affectedClients || "-");
-  html += row("Client OS", c.clientOS || "-");
-  html += row("Server OS", c.serverOS || "-");
-  html += row("Database", c.database || "-");
+  html += row(
+    "Product Name",
+    c.product || "-",
+  );
 
-  html += section("Issue");
+  html += row(
+    "Product Version",
+    c.productVersion || "-",
+  );
 
-  html += paragraph(c.issue);
+  html += row(
+    "Total Clients",
+    c.totalClients || "-",
+  );
 
-  html += section("Case Description");
+  html += row(
+    "Affected Clients",
+    c.affectedClients || "-",
+  );
 
-  html += paragraph(c.description);
+  html += row(
+    "Client OS",
+    c.clientOS || "-",
+  );
 
-  html += section("Troubleshooting Steps");
+  html += row(
+    "Server OS",
+    c.serverOS || "-",
+  );
 
-  html += paragraph(c.troubleshootingSteps || "-");
+  html += row(
+    "Database",
+    c.database || "-",
+  );
 
-  html += section("Resolution Summary");
+  // Issue
+  html += section("Issue:");
 
-  html += paragraph(c.resolutionSummary || "-");
+  html += paragraph(
+    c.issue || "-",
+  );
 
-  html += section("Logs Collected");
+  // Case Description
+  html += section("Case Description:");
 
-  html += paragraph(c.availableLogs || "-");
+  html += paragraph(
+    c.description || "-",
+  );
 
-  html += section("Log Review / Findings");
+  // Troubleshooting
+  html += section(
+    "Troubleshooting Steps:",
+  );
 
-  html += paragraph(c.logReview || "-");
+  html += paragraph(
+    c.troubleshootingSteps || "-",
+  );
 
-  html += section("Case Status");
+  // Resolution
+  html += section(
+    "Resolution Summary:",
+  );
 
-  html += paragraph(c.status);
+  html += paragraph(
+    c.resolutionSummary || "-",
+  );
+
+  // Final compact status information
+  html += row(
+    "Logs Collected",
+    c.availableLogs || "No",
+  );
+
+  html += row(
+    "Log Review / Findings",
+    c.logReview || "Not shared",
+  );
+
+  html += row(
+    "Case Status",
+    c.status || "Pending Support",
+  );
 
   return html;
 }

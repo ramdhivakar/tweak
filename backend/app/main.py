@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.routes import ai
+from app.api.routes import transcript
 from app.core.config import settings
 from app.api.routes.ai import router as ai_router
 
@@ -24,6 +26,11 @@ app.include_router(
     ai_router,
     prefix="/api/ai",
     tags=["AI"],
+)
+
+
+app.include_router(
+    transcript.router,
 )
 
 

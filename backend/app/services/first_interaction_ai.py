@@ -60,9 +60,37 @@ def generate_first_interaction(
 ) -> FirstInteractionAIResult:
 
     if not request.case:
-        return FirstInteractionAIResult()
+        return FirstInteractionAIResult(
+            contactMode=request.firstInteraction.contactMode,
+            status=request.firstInteraction.status,
+            connectedTime=request.firstInteraction.connectedTime,
+            troubleshootingSteps=request.firstInteraction.troubleshootingSteps,
+            resolutionSummary=request.firstInteraction.resolutionSummary,
+            logsCollected=request.firstInteraction.logsCollected,
+            logFindings=request.firstInteraction.logFindings,
+        )
 
     client = get_groq_client()
+
+    prompt = build_case_prompt(
+        request.case,
+        request.firstInteraction,
+    )
+
+    print(
+        "\n========== FIRST INTERACTION AI =========="
+    )
+
+    print("Source:", request.source)
+
+    print("Case:", request.case.caseId)
+
+    print(
+        "Existing First Interaction:",
+        request.firstInteraction.model_dump(),
+    )
+
+    print("==========================================\n")
 
     response = client.chat.completions.create(
         model="openai/gpt-oss-20b",
@@ -73,7 +101,7 @@ def generate_first_interaction(
             },
             {
                 "role": "user",
-                "content": build_case_prompt(request.case),
+                "content": prompt,
             },
         ],
         response_format={
@@ -94,6 +122,13 @@ def generate_first_interaction(
             "Groq returned an empty response."
         )
 
+    print(
+        "Groq raw response:",
+        content,
+    )
+
     result = json.loads(content)
 
-    return FirstInteractionAIResult.model_validate(result)
+    return FirstInteractionAIResult.model_validate(
+        result
+    )

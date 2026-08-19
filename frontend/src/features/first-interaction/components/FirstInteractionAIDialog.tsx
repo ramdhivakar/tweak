@@ -27,6 +27,8 @@ interface Props {
   onUseCaseDetails: () => void;
 }
 
+const API_URL = "http://127.0.0.1:8000";
+
 export default function FirstInteractionAIDialog({
   open,
   onOpenChange,
@@ -52,18 +54,12 @@ export default function FirstInteractionAIDialog({
     setAISource,
   } = useFirstInteraction();
 
-  /*
-   * Open file picker.
-   */
   function handleUploadClick() {
     if (loading) return;
 
     fileInputRef.current?.click();
   }
 
-  /*
-   * Handle transcript selection.
-   */
   function handleFileChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ) {
@@ -93,9 +89,6 @@ export default function FirstInteractionAIDialog({
     onUploadTranscript();
   }
 
-  /*
-   * Remove transcript.
-   */
   function clearTranscript() {
     if (loading) return;
 
@@ -108,9 +101,6 @@ export default function FirstInteractionAIDialog({
     }
   }
 
-  /*
-   * Select Existing Case Details.
-   */
   function handleUseCaseDetails() {
     if (loading) return;
 
@@ -128,8 +118,88 @@ export default function FirstInteractionAIDialog({
   }
 
   /*
-   * Send First Interaction + Case data to backend.
+   * Analyze DOCX transcript.
+   *
+   * The transcript endpoint accepts multipart/form-data
+   * because the backend needs the actual DOCX file.
    */
+  async function analyzeTranscript() {
+    if (!transcriptFile) {
+      throw new Error("Please select a transcript first.");
+    }
+
+    const formData = new FormData();
+
+    formData.append("file", transcriptFile);
+
+    console.log(
+      "Sending transcript to backend:",
+      transcriptFile.name,
+    );
+
+    const response = await fetch(
+      `${API_URL}/api/transcript/extract`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+
+    const responseText =
+      await response.text();
+
+    console.log(
+      "Transcript AI HTTP response:",
+      {
+        status: response.status,
+        ok: response.ok,
+        body: responseText,
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Transcript AI request failed (${response.status}): ${responseText}`,
+      );
+    }
+
+    if (!responseText.trim()) {
+      throw new Error(
+        "Transcript AI returned an empty response.",
+      );
+    }
+
+    let result: any;
+
+    try {
+      result = JSON.parse(responseText);
+    } catch {
+      throw new Error(
+        "Transcript AI returned invalid JSON.",
+      );
+    }
+
+    if (!result?.success) {
+      throw new Error(
+        result?.error ||
+          "Unable to analyze transcript.",
+      );
+    }
+
+    if (!result.aiResult) {
+      throw new Error(
+        "Transcript AI did not return a structured result.",
+      );
+    }
+
+    console.log(
+      "Transcript AI result:",
+      result.aiResult,
+    );
+
+    return result.aiResult;
+  }
+
   async function handleContinue() {
     if (loading) return;
 
@@ -150,40 +220,65 @@ export default function FirstInteractionAIDialog({
       setLoading(true);
       setError(null);
 
-      const source = transcriptFile
-        ? "transcript"
-        : "case";
+      /*
+       * --------------------------------------------------
+       * TRANSCRIPT FLOW
+       * --------------------------------------------------
+       */
+
+      if (transcriptFile) {
+        console.log(
+          "Generating First Interaction from transcript:",
+          {
+            caseId: currentCase.caseId,
+            transcript: transcriptFile.name,
+          },
+        );
+
+        const result =
+          await analyzeTranscript();
+
+        /*
+         * Mark the source as transcript.
+         */
+        setAISource("transcript");
+
+        /*
+         * Apply the structured AI result directly
+         * into FirstInteractionContext.
+         */
+        applyAIResult(result);
+
+        /*
+         * Close only the AI selection dialog.
+         *
+         * The main First Interaction dialog remains open.
+         */
+        onOpenChange(false);
+
+        return;
+      }
 
       /*
-       * IMPORTANT:
-       *
-       * `data` contains the values entered in
-       * FirstInteractionForm.
+       * --------------------------------------------------
+       * EXISTING CASE FLOW
+       * --------------------------------------------------
        */
+
       console.log(
-        "Generating First Interaction AI:",
+        "Generating First Interaction from existing case:",
         {
-          source,
           caseId: currentCase.caseId,
-
           firstInteractionData: data,
-
-          transcript:
-            transcriptFile?.name ?? null,
         },
       );
 
       const result =
         await generateFirstInteractionAI({
-          source,
+          source: "case",
           currentCase,
-
-          /*
-           * THIS WAS MISSING BEFORE.
-           */
           firstInteractionData: data,
-
-          transcriptFile,
+          transcriptFile: null,
         });
 
       console.log(
@@ -192,21 +287,18 @@ export default function FirstInteractionAIDialog({
       );
 
       /*
-       * Remember where the AI result came from.
+       * Mark the source as case.
        */
-      setAISource(source);
+      setAISource("case");
 
       /*
-       * Put AI result into the same context
-       * used by FirstInteractionForm.
+       * Apply the AI result into the existing
+       * First Interaction form.
        */
       applyAIResult(result);
 
       /*
-       * Close ONLY the AI selection dialog.
-       *
-       * The main First Interaction dialog
-       * remains open.
+       * Close only the AI selection dialog.
        */
       onOpenChange(false);
     } catch (error) {
@@ -225,11 +317,6 @@ export default function FirstInteractionAIDialog({
     }
   }
 
-  /*
-   * Handle dialog close.
-   *
-   * Do NOT reset FirstInteractionContext here.
-   */
   function handleDialogChange(nextOpen: boolean) {
     if (loading) return;
 
