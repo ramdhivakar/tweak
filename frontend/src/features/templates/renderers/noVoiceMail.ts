@@ -1,20 +1,14 @@
 import type { Case } from "@/features/case/types/case";
-import { heading, paragraph, row } from "../utils/templateBuilder";
+import { paragraph } from "../utils/templateBuilder";
 
 export function buildNoVoiceMail(c: Case) {
-  let html = "";
+  const phone =
+    c.phoneNumbers
+      ?.map((x) => x.value)
+      .filter(Boolean)
+      .join(", ") || "-";
 
-  html += heading("No Voice Mail");
-
-  html += row("Case Number", c.caseId);
-
-  html += row("Customer", c.customerName);
-
-  html += row("Phone", c.phoneNumbers.map((x) => x.value).join("<br>") || "-");
-
-  html += paragraph(
-    "Unable to reach the customer. No voicemail option was available. Chaser email will be sent.",
+  return paragraph(
+    `Unable to reach the customer at ${phone}, no option to leave voice mail, sending chaser-1 email.`,
   );
-
-  return html;
 }

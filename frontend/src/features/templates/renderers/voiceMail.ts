@@ -1,20 +1,14 @@
 import type { Case } from "@/features/case/types/case";
-import { heading, paragraph, row } from "../utils/templateBuilder";
+import { paragraph } from "../utils/templateBuilder";
 
 export function buildVoiceMail(c: Case) {
-  let html = "";
+  const phone =
+    c.phoneNumbers
+      ?.map((x) => x.value)
+      .filter(Boolean)
+      .join(", ") || "-";
 
-  html += heading("Voice Mail");
-
-  html += row("Case Number", c.caseId);
-
-  html += row("Customer", c.customerName);
-
-  html += row("Phone", c.phoneNumbers.map((x) => x.value).join("<br>") || "-");
-
-  html += paragraph(
-    "Unable to reach the customer. Left a voicemail. Chaser email will be sent.",
+  return paragraph(
+    `Unable to reach the customer at ${phone}. Left a voicemail. Sending chaser-1 email.`,
   );
-
-  return html;
 }

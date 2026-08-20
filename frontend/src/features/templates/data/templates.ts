@@ -52,51 +52,51 @@ export const templates: Template[] = [
     body: "",
   },
 
-  {
-    id: "reassignment",
-    title: "Case Reassignment",
-    category: "Communication",
-    body: "",
-  },
+  // {
+  //   id: "reassignment",
+  //   title: "Case Reassignment",
+  //   category: "Communication",
+  //   body: "",
+  // },
 
-  {
-    id: "logs",
-    title: "Request Logs",
-    category: "Logs",
-    body: "",
-  },
+  // {
+  //   id: "logs",
+  //   title: "Request Logs",
+  //   category: "Logs",
+  //   body: "",
+  // },
 
   {
     id: "engineering",
     title: "Engineering Escalation",
-    category: "Escalation",
+    category: "engineering",
     body: "",
   },
 
-  {
-    id: "closure",
-    title: "Case Closure",
-    category: "Closure",
-    body: "",
-  },
-  {
-    id: "chaser-1",
-    title: "Chaser 1",
-    category: "Communication",
-    body: "",
-  },
+  // {
+  //   id: "closure",
+  //   title: "Case Closure",
+  //   category: "Closure",
+  //   body: "",
+  // },
+  // {
+  //   id: "chaser-1",
+  //   title: "Chaser 1",
+  //   category: "Communication",
+  //   body: "",
+  // },
 
-  {
-    id: "chaser-2",
-    title: "Chaser 2",
-    category: "Communication",
-    body: "",
-  },
+  // {
+  //   id: "chaser-2",
+  //   title: "Chaser 2",
+  //   category: "Communication",
+  //   body: "",
+  // },
 
-  {
-    id: "chaser-3",
-    title: "Chaser 3",
-    category: "Communication",
-    body: "",
-  },
+  // {
+  //   id: "chaser-3",
+  //   title: "Chaser 3",
+  //   category: "Communication",
+  //   body: "",
+  // },
 ];

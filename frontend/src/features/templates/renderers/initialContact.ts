@@ -1,77 +1,196 @@
 import type { Case } from "@/features/case/types/case";
 
-import { heading, section, row, paragraph } from "../utils/templateBuilder";
+function cleanText(value?: string) {
+  if (!value) return "-";
 
-function list(value: string) {
-  if (!value.trim()) return "-";
+  return value
+    .replace(/\r\n/g, "\n")
+    .trim();
+}
+
+function formatList(value?: string) {
+  if (!value?.trim()) {
+    return "-";
+  }
 
   return value
     .split(/[,\n]/)
-    .map((x) => x.trim())
+    .map((item) => item.trim())
     .filter(Boolean)
     .join("<br>");
 }
 
+function formatPhones(c: Case) {
+  if (!c.phoneNumbers?.length) {
+    return "-";
+  }
+
+  return (
+    c.phoneNumbers
+      .map((phone) => phone.value?.trim())
+      .filter(Boolean)
+      .join("<br>") || "-"
+  );
+}
+
+function formatEmails(c: Case) {
+  if (!c.emails?.length) {
+    return "-";
+  }
+
+  return (
+    c.emails
+      .map((email) => email.value?.trim())
+      .filter(Boolean)
+      .join("<br>") || "-"
+  );
+}
+
 export function buildInitialContact(c: Case) {
+  const logsAvailable = Boolean(c.logsAvailable);
+  const previousCaseAvailable = Boolean(
+    c.previousCase?.trim(),
+  );
+
+  const issue = cleanText(c.issue);
+  const description = cleanText(c.description);
+
   let html = "";
 
-  html += heading("Initial Contact");
+  html += `
+    <div
+      style="
+        margin:0;
+        padding:0;
+        line-height:1.5;
+        color:#111827;
+      "
+    >
 
-  // Customer
-  html += section("Customer Information");
+      <div
+        style="
+          margin:0 0 24px 0;
+          padding:0;
+          font-size:24px;
+          font-weight:700;
+        "
+      >
+        Initial Contact Template
+      </div>
 
-  html += row("Case Number: ", c.caseId);
-  html += row("Customer Name: ", c.customerName);
-  html += row("Company Name: ", c.companyName);
+      <div><strong>Case Number:</strong> ${cleanText(c.caseId)}</div>
+      <div><strong>Customer Name:</strong> ${cleanText(c.customerName)}</div>
+      <div><strong>Company Name:</strong> ${cleanText(c.companyName)}</div>
+      <div><strong>Site ID:</strong> ${cleanText(c.siteId)}</div>
 
-  html += row(
-    "Phone Number(s):",
-    c.phoneNumbers.length
-      ? c.phoneNumbers.map((x) => x.value).join("<br>")
-      : "-",
-  );
+      <div>
+        <strong>Phone Number(s):</strong> ${formatPhones(c)}
+      </div>
 
-  html += row(
-    "Customer Email(s): ",
-    c.emails.length ? c.emails.map((x) => x.value).join("<br>") : "-",
-  );
+      <div>
+        <strong>Customer Email(s):</strong> ${formatEmails(c)}
+      </div>
 
-  html += row("Time Zone: ", c.timeZone);
+      <div>
+        <strong>Time Zone:</strong> ${cleanText(c.timeZone)}
+      </div>
 
-  // Product
-  html += section("Product Information:");
+      <br>
 
-  html += row("Product Name: ", c.product);
-  html += row("Product Version: ", c.productVersion);
-  html += row("Site ID: ", c.siteId);
+      <div>
+        <strong>Product Name:</strong> ${cleanText(c.product)}
+      </div>
 
-  // Support
-  html += section("Support Information: ");
+      <div>
+        <strong>Product Version:</strong> ${cleanText(c.productVersion)}
+      </div>
 
-  html += row("Case Type: ", c.caseType);
-  html += row("Severity: ", c.severity);
+      <br>
 
-  html += row("Logs Uploaded By Customer: ", c.logsAvailable ? "Yes" : "No");
+      <div>
+        <strong>Case Type:</strong> ${cleanText(c.caseType)}
+      </div>
 
-  if (c.logsAvailable) {
-    html += row("Available Logs: ", list(c.availableLogs));
-  }
+      <div>
+        <strong>Severity:</strong> ${cleanText(c.severity)}
+      </div>
 
-  html += row("Previous Case Available: ", c.previousCase ? "Yes" : "No");
+      <div>
+        <strong>Logs Uploaded By Customer:</strong>
+        ${logsAvailable ? "Yes" : "No"}
+      </div>
 
-  if (c.previousCase) {
-    html += row("Previous Case Number: ", c.previousCase);
+      ${
+        logsAvailable
+          ? `
+            <div>
+              <strong>Available Logs:</strong>
+              ${formatList(c.availableLogs)}
+            </div>
+          `
+          : ""
+      }
 
-    html += row("Previous Troubleshooting: ", list(c.previousTroubleshooting));
-  }
+      <div>
+        <strong>Previous Case Available:</strong>
+        ${previousCaseAvailable ? "Yes" : "No"}
+      </div>
 
-  html += section("Issue:");
+      ${
+        previousCaseAvailable
+          ? `
+            <div>
+              <strong>Previous Case Number:</strong>
+              ${cleanText(c.previousCase)}
+            </div>
 
-  html += row("", c.issue || "-");
+            <div>
+              <strong>Previous Troubleshooting:</strong>
+            </div>
 
-  html += section("Case Description:");
+            <div
+              style="
+                margin:0;
+                padding:0;
+                white-space:pre-wrap;
+              "
+            >
+              ${formatList(c.previousTroubleshooting)}
+            </div>
+          `
+          : ""
+      }
 
-  html += row("", c.description || "-");
+      <br>
+
+      <div>
+        <strong>Issue:</strong>
+      </div>
+
+      <div
+        style="
+          margin:4px 0 0 0;
+          padding:0;
+          white-space:pre-wrap;
+        "
+      >${issue}</div>
+
+      <br>
+
+      <div>
+        <strong>Case Description:</strong>
+      </div>
+
+      <div
+        style="
+          margin:4px 0 0 0;
+          padding:0;
+          white-space:pre-wrap;
+        "
+      >${description}</div>
+
+    </div>
+  `;
 
   return html;
 }

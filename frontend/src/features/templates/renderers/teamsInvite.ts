@@ -1,26 +1,37 @@
 import type { Case } from "@/features/case/types/case";
-import { heading, paragraph } from "../utils/templateBuilder";
 
 export function buildTeamsInvite(c: Case) {
-  let html = "";
+  const caseNumber = c.caseId || "-";
 
-  html += heading("Teams Invite");
+  return `
+    <div
+      style="
+        margin:0;
+        padding:0;
+        line-height:1.5;
+        color:#111827;
+      "
+    >
+      Hi
+      <br><br>
 
-  html += paragraph(`Hi ${c.customerName || ""},`);
+      This email is in reference to case #${caseNumber}.
+      <br><br>
 
-  html += paragraph(`This email is in reference to case ${c.caseId}.`);
+      Please use the link below to join the Microsoft Teams meeting for further troubleshooting.
+      <br><br>
 
-  html += paragraph(
-    "Please click on the below Microsoft Teams meeting link to join for further troubleshooting.",
-  );
+      <strong>[ Paste Teams Meeting Link Here ]</strong>
+      <br><br>
 
-  html += paragraph("<br><br><b>[ Paste Teams Meeting Link Here ]</b><br><br>");
+      Note: The meeting link expires in 15 minutes. If you are unable to join, please reply to this email with your available time, we will coordinate accordingly.
+      <br><br>
 
-  html += paragraph(
-    "Note: The meeting link expires after the scheduled time. If you are unable to join, please reply to this email so a new meeting can be scheduled.",
-  );
-
-  html += paragraph("Regards,<br>Ram Dhivakar<br>TD SYNNEX Support");
-
-  return html;
+      Regards
+      <br>
+      ESG Identity Management Security
+      <br>
+      TD SYNNEX Support
+    </div>
+  `;
 }
